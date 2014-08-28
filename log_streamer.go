@@ -4,15 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	zmq "github.com/alecthomas/gozmq"
-	"os"
 	"bytes"
+	"flag"
 )
 
-func check(err error) {
-	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
-	}
+var hostname string
+var port int
+
+func init() {
+	flag.StringVar(&hostname, "hostname", "localhost", "hostname to subscribe to")
+	flag.IntVar(&port, "port", 2112, "port to try to connect to")
+	flag.Parse()
 }
 
 type LogstashMsg struct {
@@ -30,7 +32,7 @@ func main() {
 
 	//    following subscribes to all messages
 	socket.SetSubscribe("")
-	socket.Connect("tcp://localhost:2112")
+	socket.Connect(fmt.Sprintf("tcp://%s:%d", hostname, port))
 	fmt.Println("Staring subscriber.....")
 
 	for {
@@ -43,7 +45,7 @@ func main() {
 			fmt.Println("#####", logMessage.Host, logMessage.Timestamp, "#####")
 			fmt.Println(logMessage.Message)
 		} else {
-			fmt.Println("##### ERR:", err, logMessage.Timestamp, "#####")
+			fmt.Println("##### ERR:", err, "#####")
 			fmt.Println(string(msg))
 		}
 	}
