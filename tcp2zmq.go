@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	tcpAddr, err := net.ResolveTCPAddr("tcpv4", "0.0.0.0:2115")
+	tcpAddr, err := net.ResolveTCPAddr("tcp4", "0.0.0.0:2115")
 	if err != nil {
 		fmt.Println("ResolveTCPAddr failed: %s\n", err)
 	}
