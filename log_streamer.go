@@ -39,8 +39,11 @@ func main() {
 		// Strip the bytes from the messge or you get the follwing error
 		// error: invalid character '\x00' after top-level value
 		err := json.Unmarshal(bytes.Trim(msg, "\x00"), &logMessage)
-		check(err)
-		fmt.Println("#####", logMessage.Host, logMessage.Timestamp, "#####")
-		fmt.Println(logMessage.Message)
+		if err == nil {
+			fmt.Println("##### ERR:", string(msg))
+		} else {
+			fmt.Println("#####", logMessage.Host, logMessage.Timestamp, "#####")
+			fmt.Println(logMessage.Message)
+		}
 	}
 }
